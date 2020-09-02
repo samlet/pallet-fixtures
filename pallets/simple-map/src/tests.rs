@@ -62,6 +62,17 @@ impl_outer_event! {
 	}
 }
 
+parameter_types! {
+	pub const MinimumPeriod: u64 = 1000;
+}
+
+impl timestamp::Trait for TestRuntime {
+	type Moment = u64;
+	type OnTimestampSet = ();
+	type MinimumPeriod = MinimumPeriod;
+	type WeightInfo = ();
+}
+
 impl Trait for TestRuntime {
 	type Event = TestEvent;
 }
