@@ -196,6 +196,12 @@ const TEST_SENDER: &str = "Alice";
 const LONG_VALUE : &str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec aliquam ut tortor nec congue. Pellente";
 
 #[test]
+fn account_keys() {
+	let owner = account_key(TEST_ORGANIZATION);
+	println!("{:?}", owner);
+}
+
+#[test]
 fn create_product_without_props() {
 	ExtBuilder::build().execute_with(|| {
 		// let sender = account_key(TEST_SENDER);
@@ -223,6 +229,60 @@ fn create_product_without_props() {
 				owner: owner,
 				registered: now,
 				props: None
+			})
+		);
+
+		assert_eq!(<ProductsOfOrganization<TestRuntime>>::get(owner), vec![id.clone()]);
+
+		assert_eq!(SimpleMap::owner_of(&id), Some(owner));
+
+		// Event is raised
+		assert!(System::events().iter().any(|er| er.event
+			== TestEvent::simple_map(RawEvent::ProductRegistered(
+			1,
+			id.clone(),
+			owner
+		))));
+	});
+}
+
+
+#[test]
+fn create_product_with_valid_props() {
+	ExtBuilder::build().execute_with(|| {
+		// let sender = account_key(TEST_SENDER);
+		let sender=Origin::signed(1);
+		let id = TEST_PRODUCT_ID.as_bytes().to_owned();
+		// let owner = account_key(TEST_ORGANIZATION);
+		let owner=2;
+		let now = 42;
+		Timestamp::set_timestamp(now);
+
+		let result = SimpleMap::register_product(
+			// Origin::signed(sender),
+			sender.clone(),
+			id.clone(),
+			owner.clone(),
+			Some(vec![
+				ProductProperty::new(b"prop1", b"val1"),
+				ProductProperty::new(b"prop2", b"val2"),
+				ProductProperty::new(b"prop3", b"val3"),
+			]),
+		);
+
+		assert_ok!(result);
+
+		assert_eq!(
+			SimpleMap::product_by_id(&id),
+			Some(Product {
+				id: id.clone(),
+				owner: owner,
+				registered: now,
+				props: Some(vec![
+					ProductProperty::new(b"prop1", b"val1"),
+					ProductProperty::new(b"prop2", b"val2"),
+					ProductProperty::new(b"prop3", b"val3"),
+				]),
 			})
 		);
 
