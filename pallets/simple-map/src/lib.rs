@@ -10,6 +10,7 @@ use frame_support::{
 	decl_error, decl_event, decl_module, decl_storage,
 	dispatch::DispatchResult, ensure,
 	sp_runtime::RuntimeDebug,
+	// traits::EnsureOrigin,
 };
 use frame_system::{self as system, ensure_signed};
 
@@ -79,6 +80,7 @@ impl ProductProperty {
 
 pub trait Trait: system::Trait + timestamp::Trait  {
 	type Event: From<Event<Self>> + Into<<Self as system::Trait>::Event>;
+	// type CreateRoleOrigin: EnsureOrigin<Self::Origin>;
 }
 
 decl_storage! {

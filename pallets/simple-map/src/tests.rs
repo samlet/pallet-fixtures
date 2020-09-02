@@ -1,18 +1,16 @@
-use super::RawEvent;
+// use super::{RawEvent, Product, ProductId, Products, ProductsOfOrganization};
+use super::*;
 use crate::{Error, Module, Trait};
 use frame_support::{assert_err, assert_ok, impl_outer_event, impl_outer_origin, parameter_types};
 use frame_system as system;
-use sp_core::H256;
+use sp_core::{sr25519, Pair, H256};
 use sp_io::TestExternalities;
 use sp_runtime::{
 	testing::Header,
 	traits::{BlakeTwo256, IdentityLookup},
 	Perbill,
 };
-
-impl_outer_origin! {
-	pub enum Origin for TestRuntime {}
-}
+use core::marker::PhantomData;
 
 // Workaround for https://github.com/rust-lang/rust/issues/26925 . Remove when sorted.
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -54,11 +52,16 @@ impl system::Trait for TestRuntime {
 mod simple_map {
 	pub use crate::Event;
 }
+// use crate as product_registry;
 
+impl_outer_origin! {
+    pub enum Origin for TestRuntime {}
+}
 impl_outer_event! {
 	pub enum TestEvent for TestRuntime {
 		simple_map<T>,
 		system<T>,
+		// product_registry<T>,
 	}
 }
 
@@ -73,10 +76,13 @@ impl timestamp::Trait for TestRuntime {
 	type WeightInfo = ();
 }
 
+pub struct MockOrigin<T>(PhantomData<T>);
 impl Trait for TestRuntime {
 	type Event = TestEvent;
+	// type CreateRoleOrigin = MockOrigin<TestRuntime>;
 }
 
+pub type Timestamp = timestamp::Module<TestRuntime>;
 pub type System = system::Module<TestRuntime>;
 pub type SimpleMap = Module<TestRuntime>;
 
@@ -162,4 +168,74 @@ fn increase_works() {
 
 		assert!(System::events().iter().any(|a| a.event == expected_event));
 	})
+}
+
+// ++ Products
+pub fn store_test_product<T: Trait>(id: ProductId, owner: T::AccountId, registered: T::Moment) {
+	Products::<T>::insert(
+		id.clone(),
+		Product {
+			id,
+			owner,
+			registered,
+			props: None,
+		},
+	);
+}
+
+pub fn account_key(s: &str) -> sr25519::Public {
+	sr25519::Pair::from_string(&format!("//{}", s), None)
+		.expect("static values are valid; qed")
+		.public()
+}
+
+
+const TEST_PRODUCT_ID: &str = "00012345600012";
+const TEST_ORGANIZATION: &str = "Northwind";
+const TEST_SENDER: &str = "Alice";
+const LONG_VALUE : &str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec aliquam ut tortor nec congue. Pellente";
+
+#[test]
+fn create_product_without_props() {
+	ExtBuilder::build().execute_with(|| {
+		// let sender = account_key(TEST_SENDER);
+		let sender=Origin::signed(1);
+		let id = TEST_PRODUCT_ID.as_bytes().to_owned();
+		// let owner = account_key(TEST_ORGANIZATION);
+		let owner=2;
+		let now = 42;
+		Timestamp::set_timestamp(now);
+
+		let result = SimpleMap::register_product(
+			// Origin::signed(sender),
+			sender.clone(),
+			id.clone(),
+			owner.clone(),
+			None,
+		);
+
+		assert_ok!(result);
+
+		assert_eq!(
+			SimpleMap::product_by_id(&id),
+			Some(Product {
+				id: id.clone(),
+				owner: owner,
+				registered: now,
+				props: None
+			})
+		);
+
+		assert_eq!(<ProductsOfOrganization<TestRuntime>>::get(owner), vec![id.clone()]);
+
+		assert_eq!(SimpleMap::owner_of(&id), Some(owner));
+
+		// Event is raised
+		assert!(System::events().iter().any(|er| er.event
+			== TestEvent::simple_map(RawEvent::ProductRegistered(
+			1,
+			id.clone(),
+			owner
+		))));
+	});
 }
