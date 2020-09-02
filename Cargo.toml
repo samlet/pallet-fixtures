@@ -2,5 +2,6 @@
 members = [
 	"pallets/vec-set",
 	"pallets/check-membership",
+    "pallets/simple-map",
     "traits/account-set",
 ]
