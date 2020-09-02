@@ -1,0 +1,6 @@
+[workspace]
+members = [
+	"pallets/vec-set",
+	"pallets/check-membership",
+    "traits/account-set",
+]
