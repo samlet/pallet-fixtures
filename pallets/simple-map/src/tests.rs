@@ -1,7 +1,8 @@
 // use super::{RawEvent, Product, ProductId, Products, ProductsOfOrganization};
 use super::*;
 use crate::{Error, Module, Trait};
-use frame_support::{assert_err, assert_ok, impl_outer_event, impl_outer_origin, parameter_types};
+use frame_support::{assert_err, assert_ok, assert_noop, dispatch,
+					impl_outer_event, impl_outer_origin, parameter_types};
 use frame_system as system;
 use sp_core::{sr25519, Pair, H256};
 use sp_io::TestExternalities;
@@ -297,5 +298,20 @@ fn create_product_with_valid_props() {
 			id.clone(),
 			owner
 		))));
+	});
+}
+
+#[test]
+fn create_product_with_invalid_sender() {
+	ExtBuilder::build().execute_with(|| {
+		assert_noop!(
+            SimpleMap::register_product(
+                Origin::none(),
+                vec!(),
+                2,
+                None
+            ),
+            dispatch::DispatchError::BadOrigin
+        );
 	});
 }

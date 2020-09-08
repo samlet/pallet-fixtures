@@ -3,5 +3,10 @@ members = [
 	"pallets/vec-set",
 	"pallets/check-membership",
     "pallets/simple-map",
+    "pallets/basic-token",
+    "pallets/map-set",
+    "pallets/pallet-nft",
+    "pallets/cookie-map",
     "traits/account-set",
 ]
+
