@@ -1,5 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+mod util;
+
 use sp_std::collections::btree_set::BTreeSet;
 
 /// Types that implement the AccountSet trait are able to supply a set of accounts
@@ -9,3 +11,4 @@ pub trait AccountSet {
 
 	fn accounts() -> BTreeSet<Self::AccountId>;
 }
+
