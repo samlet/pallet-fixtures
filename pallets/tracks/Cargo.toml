@@ -1,5 +1,5 @@
 [package]
-name = "cookies"
+name = "tracks"
 version = "2.0.0-rc6"
 authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
 repository = 'https://github.com/substrate-developer-hub/recipes'
@@ -22,7 +22,9 @@ std = [
     'frame-support/std',
     'frame-system/std',
     'sp-runtime/std',
+    "timestamp/std",
     'account-set/std',
+    "bluefn-util/std",
 ]
 
 [dependencies]
@@ -31,6 +33,7 @@ frame-support = { version = '2.0.0-rc6', default-features = false }
 frame-system = { version = '2.0.0-rc6', default-features = false }
 sp-runtime = { version = '2.0.0-rc6', default-features = false }
 sp-std = { version = '2.0.0-rc6', default-features = false }
+timestamp = { package = 'pallet-timestamp', version = '2.0.0-rc6', default-features = false }
 account-set = { path = '../../traits/account-set', default-features = false }
 bluefn-util = { path = '../../helpers/util', default-features = false }
 

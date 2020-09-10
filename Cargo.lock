@@ -199,6 +199,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "bluefn-util"
+version = "0.1.0"
+dependencies = [
+ "clear_on_drop",
+ "derive-new",
+ "frame-support 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "orml-utilities",
+ "parity-scale-codec",
+ "sp-core 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-io 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-runtime 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-std 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "substrate-fixed",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -223,6 +239,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "08c48aae112d48ed9f069b33538ea9e3e90aa263cfa3d1c24309612b1f7472de"
 
 [[package]]
+name = "cc"
+version = "1.0.59"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "66120af515773fb005778dc07c261bd201ec8ce50bd6e7144c927753fe013381"
+
+[[package]]
 name = "cfg-if"
 version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -241,6 +263,15 @@ dependencies = [
  "sp-runtime 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp-std 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
  "vec-set",
+]
+
+[[package]]
+name = "clear_on_drop"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c9cc5db465b294c3fa986d5bbb0f3017cd850bff6dd6c52f9ccff8b4d21b7b08"
+dependencies = [
+ "cc",
 ]
 
 [[package]]
@@ -284,6 +315,7 @@ name = "cookies"
 version = "2.0.0-rc6"
 dependencies = [
  "account-set",
+ "bluefn-util",
  "frame-support 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
  "frame-system 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
  "parity-scale-codec",
@@ -339,6 +371,21 @@ dependencies = [
  "rand_core 0.5.1",
  "subtle 2.2.3",
  "zeroize",
+]
+
+[[package]]
+name = "delegator"
+version = "2.0.0-rc6"
+dependencies = [
+ "account-set",
+ "frame-support 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "frame-system 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "parity-scale-codec",
+ "sp-core 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-io 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-runtime 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-std 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "vec-set",
 ]
 
 [[package]]
@@ -1203,6 +1250,23 @@ name = "opaque-debug"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
+
+[[package]]
+name = "orml-utilities"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "804b8d09bdc6eec1789bb8c6143ed334d74d5f71627b24ee7749e318533d79bf"
+dependencies = [
+ "frame-support 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "frame-system 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "parity-scale-codec",
+ "serde",
+ "sp-arithmetic 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-core 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-io 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-runtime 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-std 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "pallet-balances"
@@ -2498,6 +2562,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "substrate-fixed"
+version = "0.5.4"
+source = "git+https://github.com/encointer/substrate-fixed?tag=v0.5.4+sub_v0.1#2c52170fa02507dc5b52c516061302670860869a"
+dependencies = [
+ "parity-scale-codec",
+ "typenum",
+]
+
+[[package]]
 name = "subtle"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2610,6 +2683,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4f0e00789804e99b20f12bc7003ca416309d28a6f495d6af58d1e2c2842461b5"
 dependencies = [
  "lazy_static",
+]
+
+[[package]]
+name = "tracks"
+version = "2.0.0-rc6"
+dependencies = [
+ "account-set",
+ "bluefn-util",
+ "frame-support 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "frame-system 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pallet-timestamp",
+ "parity-scale-codec",
+ "sp-core 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-io 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-runtime 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-std 2.0.0-rc6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

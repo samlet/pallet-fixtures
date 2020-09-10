@@ -10,6 +10,8 @@ members = [
     "pallets/plain",
     "pallets/cookies",
     "pallets/delegator",
+	"pallets/tracks",
     "traits/account-set",
+	"helpers/util",
 ]
 
