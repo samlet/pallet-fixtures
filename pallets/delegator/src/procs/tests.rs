@@ -1,13 +1,13 @@
-use crate::*;
+use crate::procs::*;
 use frame_support::{assert_noop, assert_ok, impl_outer_event, impl_outer_origin, parameter_types};
 use frame_system as system;
+use sp_core::H256;
 use sp_io::TestExternalities;
 use sp_runtime::{
 	testing::Header,
 	traits::{BlakeTwo256, IdentityLookup},
 	Perbill,
 };
-use sp_core::{sr25519, Pair, H256};
 
 impl_outer_origin! {
 	pub enum Origin for TestRuntime {}
@@ -30,8 +30,7 @@ impl system::Trait for TestRuntime {
 	type BlockNumber = u64;
 	type Hash = H256;
 	type Hashing = BlakeTwo256;
-	// type AccountId = u64;
-	type AccountId = sr25519::Public;
+	type AccountId = u64;
 	type Lookup = IdentityLookup<Self::AccountId>;
 	type Header = Header;
 	type Event = TestEvent;
@@ -51,23 +50,30 @@ impl system::Trait for TestRuntime {
 	type SystemWeightInfo = ();
 }
 
-mod vec_set {
-	pub use crate::Event;
+mod check_membership {
+	pub use crate::procs::Event;
 }
 
 impl_outer_event! {
 	pub enum TestEvent for TestRuntime {
 		vec_set<T>,
 		system<T>,
+		check_membership<T>,
 	}
+}
+
+impl vec_set::Trait for TestRuntime {
+	type Event = TestEvent;
 }
 
 impl Trait for TestRuntime {
 	type Event = TestEvent;
+	type MembershipSource = VecSet;
 }
 
 pub type System = system::Module<TestRuntime>;
-pub type Cookies = Module<TestRuntime>;
+pub type VecSet = vec_set::Module<TestRuntime>;
+pub type Delegator = Module<TestRuntime>;
 
 pub struct ExtBuilder;
 
@@ -82,24 +88,24 @@ impl ExtBuilder {
 	}
 }
 
+#[test]
+fn members_can_call() {
+	ExtBuilder::build().execute_with(|| {
+		assert_ok!(VecSet::add_member(Origin::signed(1)));
 
-pub fn account_key(s: &str) -> sr25519::Public {
-	sr25519::Pair::from_string(&format!("//{}", s), None)
-		.expect("static values are valid; qed")
-		.public()
+		assert_ok!(Delegator::check_membership(Origin::signed(1)));
+
+		let expected_event = TestEvent::check_membership(RawEvent::IsAMember(1));
+		assert!(System::events().iter().any(|a| a.event == expected_event));
+	})
 }
 
-const TEST_SENDER: &str = "Alice";
-
 #[test]
-fn add_member_works() {
+fn non_members_cant_call() {
 	ExtBuilder::build().execute_with(|| {
-		let sender = account_key(TEST_SENDER);
-		assert_ok!(Cookies::add_member(Origin::signed(sender)));
-
-		let expected_event = TestEvent::vec_set(RawEvent::MemberAdded(sender));
-		assert!(System::events().iter().any(|a| a.event == expected_event));
-
-		assert!(<Members<TestRuntime>>::contains_key(sender));
+		assert_noop!(
+			Delegator::check_membership(Origin::signed(1)),
+			Error::<TestRuntime>::NotAMember
+		);
 	})
 }

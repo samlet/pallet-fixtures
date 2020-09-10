@@ -9,6 +9,7 @@ members = [
     "pallets/cookie-map",
     "pallets/plain",
     "pallets/cookies",
+    "pallets/delegator",
     "traits/account-set",
 ]
 
