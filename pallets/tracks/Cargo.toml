@@ -37,6 +37,18 @@ timestamp = { package = 'pallet-timestamp', version = '2.0.0-rc6', default-featu
 account-set = { path = '../../traits/account-set', default-features = false }
 bluefn-util = { path = '../../helpers/util', default-features = false }
 
+[dev-dependencies.hex]
+default_features = false
+package = 'hex'
+version = '0.4.2'
+
+[dependencies.fixed]
+default-features = false
+git = "https://github.com/encointer/substrate-fixed"
+package = "substrate-fixed"
+tag = "v0.5.4+sub_v0.1"
+version = "0.5.4"
+
 [dev-dependencies]
 sp-core = { version = '2.0.0-rc6', default-features = false }
 sp-io = { version = '2.0.0-rc6', default-features = false }

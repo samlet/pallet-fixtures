@@ -70,8 +70,8 @@ pub struct ShippingEvent<Moment> {
 
 #[derive(Encode, Decode, Clone, PartialEq, Eq, RuntimeDebug)]
 pub struct ReadPoint {
-    latitude: Decimal,
-    longitude: Decimal,
+    pub latitude: Decimal,
+    pub longitude: Decimal,
 }
 
 #[derive(Encode, Decode, Clone, PartialEq, Eq, RuntimeDebug)]
